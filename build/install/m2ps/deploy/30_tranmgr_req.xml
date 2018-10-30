@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+
+<txnmgr name="txnmgr_req" logger="Q2" class="org.jpos.transaction.TransactionManager">
+	<property name="space" value="transient:default"/>
+   <property name="queue" value="queue_tranmgr_req"/>  
+   <property name="max-sessions" value="10"/>
+
+
+	<!-- Protect Debug Participant -->
+   <participant class="org.jpos.transaction.ProtectDebugInfo" logger="Q2" realm="protect-debug">                                 
+   	<property name="checkpoint" value="protect-debug-info"/>
+      <!-- Wipes entries from context -->
+      <property name="wipe-entry" value="PAN"/>
+      <property name="wipe-entry" value="EXP"/>
+      <!-- Protects contents from any ISOMsg in context -->
+      <property name="protect-ISOMsg" value="2"/>
+      <property name="protect-ISOMsg" value="35"/>
+      <property name="protect-ISOMsg" value="45"/>
+      <!-- Wipes contents from any ISOMsg in context -->
+      <property name="wipe-ISOMsg" value="48"/>
+      <property name="wipe-ISOMsg" value="52"/>
+	</participant>
+    
+	<!-- Debug Participant -->
+   <participant class="org.jpos.transaction.Debug" logger="Q2" realm="debug">      
+   	<property name="checkpoint" value="debug"/>
+   </participant>  
+
+
+
+
+	<!-- Validates the incoming message -->
+	<participant class="com.m2ps.tranmanager.ValidateMessage" logger="Q2" />
+	
+	<!-- Records the Transaction to the database -->
+   <participant class="org.jpos.transaction.Open" logger="Q2" realm="open-db">     
+   	<property name="checkpoint" value="db-open"/>
+   </participant>
+   <participant class="com.m2ps.tranmanager.LogTransaction" logger="Q2" realm="log-transaction"/>
+   <participant class="org.jpos.transaction.Close" logger="Q2" realm="close-db">   
+   	<property name="checkpoint" value="close"/>
+   </participant>
+    
+  
+   
+   <participant class="com.m2ps.tranmanager.ForwardToSink" logger="Q2" />
+     
+</txnmgr>
+

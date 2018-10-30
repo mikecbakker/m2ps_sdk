@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+
+<server class="org.jpos.q2.iso.QServer" logger="Q2" name="qserver_snk1">
+ <attr name="port" type="java.lang.Integer">10004</attr>
+ <channel class="org.jpos.iso.channel.XMLChannel" logger="Q2" packager="org.jpos.iso.packager.XMLPackager"></channel>
+ <request-listener class="com.m2ps.node.snk.IsoSnkServer" logger="Q2">
+ 	<property name="space" value="transient:default" /> 
+ 	<property name="queue" value="queue_tranmgr_rsp" /> 
+ </request-listener>
+ 
+	<in>qserver_snk1-receive</in>
+	<out>qserver_snk1-send</out>
+</server>
+
